@@ -323,7 +323,7 @@ Exemplo de body:
 }
 ```
 
-#### Listar Todos (com filtros)
+#### Listar Users (com filtros)
 ```
 GET /users
 ```
@@ -347,13 +347,13 @@ GET /users
 ]
 ```
 
-#### Obter Todo por ID
+#### Obter User por ID
 ```
 GET /users/{id}
 ```
 **200 OK** — Mesmo formato do **Create User**.
 
-#### Atualizar Todo
+#### Atualizar User
 ```
 PUT /users/{id}
 Content-Type: application/json
@@ -369,7 +369,7 @@ Exemplo de body:
 ```
 **200 OK** — Retorna o user atualizado.
 
-#### Excluir Todo
+#### Excluir User
 ```
 DELETE /todos/{id}
 ```
