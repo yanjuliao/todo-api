@@ -40,34 +40,72 @@ API REST simples e bem estruturada para gerenciar **Tarefas (Todos)** e **Catego
 src/
   app.module.ts
   main.ts
+  auth/
+    application/
+      dto/
+        login.dto.ts
+      auth.controller.ts
+      auth.module.ts
+      auth.service.ts
+      bearer-token.guard.ts
+      bearer-token.guard.ts
+      jwt-auth.guard.ts
+      public.decorator.ts
+      roles.decorator.ts
+      roles.guard.ts
+    infraestructure/
+      jwt.strategy.ts
   common/
     to-dto.ts
   categories/
-    categories.controller.ts
+    application/
+      categories.controller.ts
+      category.mapper.ts
+      dto/
+        requests/create-category.dto.ts
+        response/category-summary.dto.ts
+        response/category.response.dto.ts
+    domain/  
+      categories.service.ts
+      constants/messages.ts
+    infraestructure/
+      category.entity.ts
+      categories.repository.ts
     categories.module.ts
-    categories.service.ts
-    constants/messages.ts
-    dto/
-      requests/create-category.dto.ts
-      response/category-summary.dto.ts
-      response/category.response.dto.ts
-    entities/category.entity.ts
-    mapper/category.mapper.ts
-    repository/categories.repository.ts
   todos/
-    todos.controller.ts
+    application/
+      todos.controller.ts
+      todo.mapper.ts
+      dto/
+        requests/create-todo.dto.ts
+        requests/update-todo.dto.ts
+        requests/filter-todo.query.dto.ts
+        response/todo.response.dto.ts
+    domain/
+      todos.service.ts
+      constants/messages.ts
+      enums/todo-status.enum.ts
+    infraestructure/
+      todo.entity.ts
+      todos.repository.ts
     todos.module.ts
-    todos.service.ts
-    constants/messages.ts
-    dto/
-      requests/create-todo.dto.ts
-      requests/update-todo.dto.ts
-      requests/filter-todo.query.dto.ts
-      response/todo.response.dto.ts
-    entities/todo.entity.ts
-    enums/todo-status.enum.ts
-    mapper/todo.mapper.ts
-    repository/todos.repository.ts
+  users/
+    application/
+      users.controller.ts
+      user.mapper.ts
+      dto/
+        requests/create-user.dto.ts
+        requests/update-user.dto.ts
+        response/user.response.dto.ts
+    domain/
+      users.service.ts
+      constants/messages.ts
+      enums/role.enum.ts
+    infraestructure/
+      user.entity.ts
+      users.repository.ts
+    users.module.ts
+  
 ```
 
 ## Como Rodar
@@ -258,6 +296,88 @@ DELETE /todos/{id}
 
 ---
 
+### Users
+#### Criar User
+```
+POST /users
+Content-Type: application/json
+```
+Exemplo de body:
+```json
+{
+  "name": "Edmilson",
+  "email": "edmilson@example.com",
+  "password": "teste123",
+  "role": "USER"
+}
+```
+**201 Created** — Exemplo de resposta:
+```json
+{
+  "id": 10,
+  "name": "Edmilson",
+  "email": "edmilson@example.com",
+  "role": "USER",
+  "createdAt": "2025-08-11T14:35:00.000Z",
+  "updatedAt": "2025-08-11T14:40:00.000Z"
+}
+```
+
+#### Listar Todos (com filtros)
+```
+GET /users
+```
+
+
+Exemplo:
+```
+GET /users
+```
+**200 OK** — Exemplo:
+```json
+[
+  {
+    "id": 10,
+    "name": "Edmilson",
+    "email": "edmilson@example.com",
+    "role": "USER",
+    "createdAt": "2025-08-11T14:35:00.000Z",
+    "updatedAt": "2025-08-11T14:40:00.000Z"
+  }
+]
+```
+
+#### Obter Todo por ID
+```
+GET /users/{id}
+```
+**200 OK** — Mesmo formato do **Create User**.
+
+#### Atualizar Todo
+```
+PUT /users/{id}
+Content-Type: application/json
+```
+Exemplo de body:
+```json
+{
+  "name": "Edmilson",
+  "email": "edmilsonShow@example.com",
+  "password": "teste124",
+  "role": "USER"
+}
+```
+**200 OK** — Retorna o user atualizado.
+
+#### Excluir Todo
+```
+DELETE /todos/{id}
+```
+- **204 No Content** em caso de sucesso
+- **404 Not Found** se o todo não existir
+
+---
+
 ## Códigos de Erro
 A API retorna códigos/mensagens padronizados:
 - `category_not_found`
@@ -275,7 +395,7 @@ A API retorna códigos/mensagens padronizados:
 - **Mensagens**: centralizadas por módulo (`CATEGORY_MESSAGES`, `TODO_MESSAGES`).
 - **DB**: `synchronize: true` para o desafio; em produção usar **migrations** e `synchronize: false`.
 
-## Autenticação BEARER TOKEN
-- Autenticação JWT (Bearer) protegendo POST/PUT/DELETE. 
-- A autenticação lê o arquivo .env em busca de uma chave chamada API_TOKEN cujo valor de teste eu passei super-secret-token. 
-- As rotas GET são públicas.
+## Autenticação JWT
+- Toda vez que o projeto roda, a main tenta criar o usuario admin a partir dos dados do env conforme .env_example, se não existir o admin no banco ele cria.
+- Após isso é só logar com usuário e senha admin do env. A rota de login é publica e todas as outras são protegidas por token.
+- As únicas diferenças de role admin e user é que o user não consegue excluir um usuário e também não consegue criar um usuário admin, somente admin pode criar um usuário admin.
