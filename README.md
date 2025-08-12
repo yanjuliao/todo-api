@@ -14,7 +14,7 @@ API REST simples e bem estruturada para gerenciar **Tarefas (Todos)** e **Catego
   - [Todos](#todos)
 - [Códigos de Erro](#códigos-de-erro)
 - [Boas Práticas e Decisões](#boas-práticas-e-decisões)
-- [Melhorias Futuras](#melhorias-futuras)
+- [Autenticação JWT](#autenticação-JWT)
 
 ---
 
